@@ -2,3 +2,12 @@
     border: 2px solid black;
     margin: 25px 50px 75px 100px;
 }
+
+.divider {
+    width: 100%;
+    text-align: left;
+    margin-left: 0;
+    height: .25px;
+    color: lightgray;
+    background-color: lightgray;
+}
