@@ -42,7 +42,7 @@ class SearchInput extends Component {
                 />
                 <button type="submit" > Search</button>
             </div>*/
-            <form className="SearchInput" > 
+            <div className="SearchInput" > 
                 <label>
                     Search: 
                     <input 
@@ -60,7 +60,7 @@ class SearchInput extends Component {
                     handleFilterByBookTypeChange={this.props.handleFilterByBookTypeChange}
                     handleSearchtermSubmit={this.props.handleSearchtermSubmit}
                 />
-            </form>
+            </div>
 
         ); 
     } 

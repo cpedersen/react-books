@@ -8,8 +8,6 @@ import DisplayBooklist from './displayBooklist.js';
 class SearchBooks extends Component {
     render() {
         console.log("Inside SearchBooks!: ", this.props.searchTerm)
-
-
         return (
             <div className="SearchBooks">
                 I'm SearchBooks!
@@ -25,7 +23,10 @@ class SearchBooks extends Component {
                     handleFilterByPrintTypeChange ={this.props.handleFilterByPrintTypeChange}
                     handleFilterByBookTypeChange={this.props.handleFilterByBookTypeChange}
                     />
-                <DisplayBooklist/>
+                <DisplayBooklist                    
+                    searchTerm={this.props.searchTerm}
+                    books={this.props.books}
+                />
             </div>
         );
     }

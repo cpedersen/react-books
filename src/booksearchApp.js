@@ -3,6 +3,7 @@ import './booksearchApp.css';
 import SearchBooks from './searchBooks.js';
 //import DisplayBooklist from './displayBooklist.js';
 import Heading from './heading.js';
+import DisplayBooklist from './displayBooklist';
 //import FilterBy from './filterBy.js';
 //import { findAllByTestId } from '@testing-library/dom';
 
@@ -135,23 +136,22 @@ class BooksearchApp extends Component {
       };
       console.log("url: " + url)
 
-      fetch("https://www.google.com")
-          /*.then(response => {
+      fetch(url)
+          .then(response => {
             console.log('About to check for errors');
             if(!response.ok) {
               console.log('Got a GET error :-( ');
               throw new Error('Could not do a GET'); 
             }
             console.log('Successfully did a GET!');
-            //YOUAREHERE
             return response.json(); 
-          })*/
-          .then(response => response.json())
+          })
+          //.then(response => response.json())
           .then(data => {
             console.log("data:")
             console.log(data);
             this.setState({
-                books: data,
+                books: data.items,
                 err: null
             });
           })
@@ -159,14 +159,15 @@ class BooksearchApp extends Component {
             console.log('Error: ', err.message);
             this.setState({
               error: err.message,
-              //books: []
+              books: []
           });
         });
     }
     
     render() {
-        //console.log("Inside BooksearchApp! data: ", this.state.data)
-        console.log("Inside BooksearchApp! searchTerm!: ", this.state.searchTerm)
+        console.log("Inside BooksearchApp!")
+        console.log("searchTerm: ", this.state.searchTerm)
+        console.log("books: ", this.state.books)
         return (
             <div className="BooksearchApp">
                 I'm BooksearchApp!
@@ -183,7 +184,6 @@ class BooksearchApp extends Component {
                     handleFilterByPrintTypeChange ={this.handleFilterByPrintTypeChange}
                     handleFilterByBookTypeChange={this.handleFilterByBookTypeChange}
                   />
-
             </div>
         );
     }
