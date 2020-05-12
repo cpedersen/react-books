@@ -10,22 +10,21 @@ class SearchBooks extends Component {
         console.log("Inside SearchBooks!: ", this.props.searchTerm)
         return (
             <div className="SearchBooks">
-                I'm SearchBooks!
                 <SearchInput 
                     searchTerm={this.props.searchTerm}
                     books={this.props.books}
-
                     handleSearchtermChange ={this.props.handleSearchtermChange}
                     handleSearchtermSubmit={this.props.handleSearchtermSubmit}
-
                     filterByBookType={this.props.filterByBookType}
                     filterByPrintType={this.props.filterByPrintType}
                     handleFilterByPrintTypeChange ={this.props.handleFilterByPrintTypeChange}
                     handleFilterByBookTypeChange={this.props.handleFilterByBookTypeChange}
+                    filteredBooks={this.props.books}
                     />
                 <DisplayBooklist                    
                     searchTerm={this.props.searchTerm}
                     books={this.props.books}
+                    filteredBooks={this.props.books}
                 />
             </div>
         );

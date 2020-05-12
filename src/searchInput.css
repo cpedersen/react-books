@@ -1,6 +1,13 @@
-.SearchInput {
-    border: 2px solid black;
-    margin: 15px 50px 15px 100px;
+.SearchAndFilter {
+    /*border: 2px solid black;*/
+    /*margin: 15px 50px 15px 100px;*/
     /*margin: 15px 0px 15px 0px;*/
-    background-color: #deeff5;
+    background-color: #A9A9A9;
+    margin: 0 auto;
+}
+
+.SearchInput {
+    padding-top: 10px;
+    padding-bottom: 0px;
+
 }

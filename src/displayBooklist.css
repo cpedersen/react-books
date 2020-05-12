@@ -11,3 +11,19 @@
     color: lightgray;
     background-color: lightgray;
 }
+
+.bookImg {
+    width: 150px;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+.bookInfo {
+    border: 1px solid black;
+    width: 150px;
+}
+
+.bookContainer {
+    border: 1px solid black;  
+}

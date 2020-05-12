@@ -25,35 +25,24 @@ class SearchInput extends Component {
 
 
     render() {
-        console.log("Inside SearchInput!: ", this.props)
-        /*const data = this
-            .props
-            .data
-            .map((item, i) => <DisplayBooklist { ...item } key={i}/>);*/
-            
+        console.log("Inside SearchInput!: ", this.props)  
         return (
-            /*<div className="SearchInput">
-                <label htmlFor="title">Search:</label>
-                <input 
-                    id="search" 
-                    type="text" 
-                    name="search" 
-                    placeholder="Search"
-                />
-                <button type="submit" > Search</button>
-            </div>*/
-            <div className="SearchInput" > 
-                <label>
-                    Search: 
-                    <input 
-                        type="text" 
-                        value={this.props.searchTerm} 
-                        onChange={(event) => this.props.handleSearchtermChange(event)}/>
-                </label>
-                <button onClick={this.props.handleSearchtermSubmit}>Search</button>
+            <div className="SearchAndFilter" > 
+                <div className="SearchInput">
+                    <label>
+                        Search: 
+                        <input 
+                            type="text" 
+                            value={this.props.searchTerm} 
+                            onChange={(event) => this.props.handleSearchtermChange(event)}/>
+                        </label>
+                    <button onClick={this.props.handleSearchtermSubmit}>Search</button>
+                </div>
 
                 <FilterBy
+                    searchTerm={this.props.searchTerm}
                     books={this.props.books}
+                    filteredBooks={this.props.books}
                     filterByBookType={this.props.filterByBookType}
                     filterByPrintType={this.props.filterByPrintType}
                     handleFilterByPrintTypeChange ={this.props.handleFilterByPrintTypeChange}

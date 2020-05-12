@@ -5,7 +5,7 @@ function Heading () {
     console.log("Inside Heading!")
     return (
         <div className="Heading">
-            <h2 className="HeadingText">Google Book Search</h2>
+            <h1 className="HeadingText">Google Book Search</h1>
         </div>
     );
 }

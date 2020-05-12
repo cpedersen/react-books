@@ -5,7 +5,6 @@ class BookDisplay extends Component {
     render() {
         console.log("Inside BookDisplay!")
 
-
         return (
             <div className="BookDisplay">
                 I'm BookDisplay!: 

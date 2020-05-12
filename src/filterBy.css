@@ -1,5 +1,10 @@
 .FilterBy {
-    border: 2px solid black;
-    margin: 15px 50px 15px 100px;
+    /*border: 2px solid black;*/
+    /*margin: 15px 50px 15px 100px;*/
+    margin: 15px 0px 15px 0px;
+    /*margin: 0 auto;*/
     background-color: #E0E0E0;
+    padding-top: 10px;
+    padding-bottom: 10px;
+
 }
