@@ -5,7 +5,6 @@ import BooksearchApp from './booksearchApp.js';
 class App extends Component {
 
     render() {
-        console.log("App!")
         return (
             <div className="App">
                 <BooksearchApp/>

@@ -1,12 +1,8 @@
 import React, { Component } from 'react';
 import './filterBy.css';
-//import SearchInput from './searchInput.js';
-//import FilterByBookType from './filterByBookType.js';
-//import FilterByPrintType from './filterByPrintType.js';
 
 class FilterBy extends Component {
     render() {
-        console.log("Inside FilterBy!: ", this.props)
         return (
             <div className="FilterBy">
                 <label htmlFor="PrintType">Print Type:
@@ -14,14 +10,10 @@ class FilterBy extends Component {
                         onChange={(event) => 
                             this.props.handleFilterByPrintTypeChange(event)
                         }
-                        /*onChange={(event) => 
-                            this.props.handleSearchtermSubmit(event)
-                        }*/
-  
                         value={this.props.filterByPrintType} > 
-                        <option defaultValue="all">all</option>
-                        <option value="books">books</option>
-                        <option value="magazines">magazines</option>
+                        <option defaultValue="all">All</option>
+                        <option value="books">Books</option>
+                        <option value="magazines">Magazines</option>
                     </select>
                 </label>
 
@@ -30,16 +22,13 @@ class FilterBy extends Component {
                         onChange={(event) => 
                             this.props.handleFilterByBookTypeChange(event)
                         }
-                        /*onChange={(event) => 
-                            this.props.handleSearchtermSubmit(event)
-                        }*/
-  
                         value={this.props.filterByBookType} >
-                        <option defaultValue="partial">partial</option>
-                        <option value="full">full</option>
-                        <option value="free-ebooks">free ebooks</option>
-                        <option value="paid-ebooks">paid ebooks</option>
-                        <option value="ebooks">ebooks</option>
+                        <option defaultValue="noFilter">No Filter</option>
+                        <option value="partial">Partial</option>
+                        <option value="full">Full</option>
+                        <option value="free-ebooks">Free Ebooks</option>
+                        <option value="paid-ebooks">Paid Ebooks</option>
+                        <option value="ebooks">Ebooks</option>
                     </select> 
                 </label>
                 
@@ -49,14 +38,3 @@ class FilterBy extends Component {
 }
 
 export default FilterBy;
-
-
-
-//<input type="submit" value="Submit"/>
-/*<button type="submit" > Search</button>*/
-//onChange={(event) => this.props.handleFilterByPrintTypeChange(event)}
-//onChange={(event) => this.props.handleFilterByBookTypeChange(event)}
-//onChange={this.props.handleSearchtermChange}
-//onChange={this.props.handleFilterByPrintTypeChange}
-//onChange={(event) => this.props.handleSearchtermChange(event)}
-//<input type="submit" value="Submit"/>
