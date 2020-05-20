@@ -25,6 +25,11 @@ class SearchBooks extends Component {
                     books={this.props.books}
                     filteredBooks={this.props.books}
                     handlePaginationNext={this.props.handlePaginationNext}
+                    handlePaginationPrevious={this.props.handlePaginationPrevious}
+                    startIndex={this.props.startIndex}
+                    endIndex={this.props.endIndex}
+                    totalCount={this.props.totalCount}
+                    defaultCount={this.props.defaultCount}
                 />
             </div>
         );

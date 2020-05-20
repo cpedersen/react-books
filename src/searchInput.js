@@ -14,7 +14,7 @@ class SearchInput extends Component {
                             value={this.props.searchTerm} 
                             onChange={(event) => this.props.handleSearchtermChange(event)}/>
                         </label>
-                    <button onClick={this.props.handleSearchtermSubmit}>Search</button>
+                    <button onClick={this.props.handleSearchtermSubmit("default")}>Search</button>
                 </div>
 
                 <FilterBy
