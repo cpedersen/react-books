@@ -71,8 +71,8 @@ class DisplayBooklist extends Component {
     }
 
     render() {
-        console.log("DisplayBooklist startIndex: ", this.props.startIndex);
-        console.log("DisplayBooklist endIndex: ", this.props.endIndex);
+        //console.log("DisplayBooklist startIndex: ", this.props.startIndex);
+        //console.log("DisplayBooklist endIndex: ", this.props.endIndex);
 
         //If books found, then get info to display for each book 
         let displayData = '';
