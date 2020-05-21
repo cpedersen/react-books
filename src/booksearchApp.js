@@ -34,8 +34,8 @@ class BooksearchApp extends Component {
       this.setState({searchTerm: event.target.value});
     }
 
-    handleSearchtermSubmit(flag) {
-      this.fetchData(flag);
+    handleSearchtermSubmit() {
+      this.fetchData("next");
     }
 
     handleFilterByPrintTypeChange(event) {
@@ -54,47 +54,16 @@ class BooksearchApp extends Component {
     }
 
     handlePaginationNext() {
-      //Don't change startIndex if totalCount is reached
-      this.handleSearchtermSubmit("next");
-
-      /*if ((this.state.startIndex + this.state.defaultCount) > this.state.totalCount) {
-        console.log("Found handlePaginationNext problem");
-        this.setState({
-          startIndex: this.state.startIndex,
-          endIndex: (this.state.endIndex - this.state.defaultCount),
-        });
-      } else {
-        this.handleSearchtermSubmit();
-        this.setState({
-          startIndex: (this.state.startIndex + this.state.defaultCount),
-          endIndex: (this.state.endIndex + this.state.defaultCount),
-        });
-      }*/
+      this.fetchData("next");
     }
 
     handlePaginationPrevious() {
-      //Reset startIndex and endIndex if less than 0
-
-      this.handleSearchtermSubmit("previous");
-
-      /*if ((this.state.startIndex - this.state.defaultCount) < 0) {
-        console.log("Found hanglePaginationPrevious problem");
-        this.setState({
-          startIndex: 0,
-          endIndex: this.state.defaultCount,
-        });
-      } else {
-        this.handleSearchtermSubmit("previous");
-        this.setState({
-          startIndex: (this.state.startIndex - this.state.defaultCount),
-          endIndex: (this.state.endIndex - this.state.defaultCount),
-        });
-      }*/
+      this.fetchData("previous");
     }
 
     fetchData(flag) {
-      console.log("fetchData startIndex: ", this.state.startIndex);
-      console.log("fetchData endIndex: ", this.state.startIndex + this.state.defaultCount);
+      //console.log("fetchData startIndex: ", this.state.startIndex);
+      //console.log("fetchData endIndex: ", this.state.startIndex + this.state.defaultCount);
       const apiKey = '&key=AIzaSyBks18TNVfYhV7HAV5HosyBYgGI3e1nV4Q';
       const path = '/books/v1/volumes';
       const printTypeQuery = '&printType=' + this.state.filterByPrintType;
@@ -103,10 +72,10 @@ class BooksearchApp extends Component {
       const maxResultsQuery = '&maxResults=' + this.state.defaultCount;
       const searchQuery = '?q=' + this.state.searchTerm;
       let url ='https://www.googleapis.com' + path + searchQuery + printTypeQuery + startIndexQuery + maxResultsQuery + apiKey;
-      console.log("noFilter: ", this.state.noFilter);
-      if (this.state.noFilter === 0) {
+      //console.log("noFilter: ", this.state.noFilter);
+      /*if (this.state.noFilter === 0) {
         url += bookTypeQuery;
-      } 
+      } */
       /*const options = {
           method: 'GET',
           headers: {
@@ -118,6 +87,7 @@ class BooksearchApp extends Component {
       console.log("bookTypeQuery: " + bookTypeQuery)
 
       if (((this.state.startIndex + 10) > this.state.totalCount) && (this.state.startIndex !== 0)) {
+        //Do nothing if out of bounds
         return;
       } 
 
@@ -135,50 +105,70 @@ class BooksearchApp extends Component {
             console.log(data);
             
             if (flag === "next") {
-            //if ((this.state.startIndex + this.state.defaultCount) > this.state.totalCount) {
-              //If the startIndex is greater than the total, then keep the same values as before
               console.log("Made it inside Option #1 (next)");
               if ((this.state.startIndex + this.state.defaultCount) < this.state.totalCount) {
+                //This is the positive case: haven't yet reached the upper boundary
                 this.setState({
                   books: data.items,
-                  startIndex: this.state.startIndex,
-                  endIndex: (this.state.endIndex + this.state.defaultCount),
+                  startIndex: this.state.startIndex + this.state.defaultCount,
+                  endIndex: this.state.endIndex + this.state.defaultCount,
                   totalCount: data.totalItems,
+                  displayNext: true,
+                  displayPrevious: true,
                   err: null
                 });
               } else {
+                //This is the negative case: we reached the upper boundary
                 this.setState({
                   books: data.items,
                   startIndex: this.state.startIndex,
                   endIndex: this.state.endIndex,
                   totalCount: data.totalItems,
                   displayNext: false,
+                  displayPrevious: true,
                   err: null
                 });
               }
-            //} else if (this.state.startIndex - this.state.defaultCount < 0) {
             } else if (flag === "previous") {
-              //If the startIndex is less than 0, then reset it
               console.log("Made it inside Option #2 (previous)");
-              this.setState({
-                books: data.items,
-                startIndex: 0,
-                endIndex: this.state.defaultCount,
-                totalCount: data.totalItems,
-                err: null
-              });
+              if ((this.state.startIndex - this.state.defaultCount) > 0) {
+                //This is the positive case: haven't yet reached the lower boundary
+                this.setState({
+                  books: data.items,
+                  startIndex: this.state.startIndex - this.state.defaultCount,
+                  endIndex: this.state.endIndex - this.state.defaultCount,
+                  totalCount: data.totalItems,
+                  displayPrevious: true,
+                  displayNext: true,
+                  err: null
+                });
+              } else {
+                //This is the negative case: we reached the lower boundary
+                this.setState({
+                  books: data.items,
+                  startIndex: this.state.startIndex,
+                  endIndex: this.state.endIndex,
+                  totalCount: data.totalItems,
+                  displayPrevious: false,
+                  displayNext: true,
+                  err: null
+                });
+              }
             } else {
               console.log("Made it inside Option #3 (default)");
+              //This is what is set after the Search button is selected (initial state)
               this.setState({
                 books: data.items,
                 startIndex: (this.state.startIndex + this.state.defaultCount),
                 endIndex: (this.state.endIndex + this.state.defaultCount),
                 totalCount: data.totalItems,
+                displayPrevious: false,
+                displayNext: true,
                 err: null
               });
             }
+         })
 
-          })
           .catch(err => {
             console.log('Error: ', err.message);
             this.setState({
@@ -210,6 +200,8 @@ class BooksearchApp extends Component {
                     filteredBooks={this.state.books}
                     handlePaginationNext={this.handlePaginationNext}
                     handlePaginationPrevious={this.handlePaginationPrevious}
+                    displayNext={this.state.displayNext}
+                    displayPrevious={this.state.displayPrevious}
                   />
             </div>
         );

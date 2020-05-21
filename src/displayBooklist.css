@@ -75,6 +75,7 @@
     text-decoration: none;
     display: inline-block;
     padding: 8px 16px;
+    cursor: not-allowed;
 }
 
 .nextDisabled {
@@ -83,6 +84,7 @@
     text-decoration: none;
     display: inline-block;
     padding: 8px 16px;
+    cursor: not-allowed;
 }
 
 /*.previous {

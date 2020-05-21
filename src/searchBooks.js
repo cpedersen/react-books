@@ -30,6 +30,8 @@ class SearchBooks extends Component {
                     endIndex={this.props.endIndex}
                     totalCount={this.props.totalCount}
                     defaultCount={this.props.defaultCount}
+                    displayNext={this.props.displayNext}
+                    displayPrevious={this.props.displayPrevious}
                 />
             </div>
         );

@@ -92,43 +92,50 @@ class DisplayBooklist extends Component {
             });
         }
 
-
-
-        if (this.props.totalCount === 0) {
-            //Don't display any counts when no books found
+        //Condition for when we want the display of counts to show up
+        //if (this.props.totalCount === 0) {
+            //Don't display any counts when no books 
             return (
                 <div>
+                    {this.props.totalCount > 0 && 
+                        <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>}
+
                     <a
                         onClick={(event) => this.props.handlePaginationPrevious()}
-                        href="#top" className="previous">&laquo; Previous
+                        href="#top" className={this.props.displayPrevious ? "previous": "previousDisabled"}>&laquo; Previous
                     </a>
+
                     <a
                         onClick={(event) => this.props.handlePaginationNext()}
-                        href="#top" className="next">Next &raquo;
+                        href="#top" className={this.props.displayNext ? "next": "nextDisabled"}>Next &raquo;
                     </a>
                     {displayData}
                 </div>
             );
-        } else {
+        //} 
+        
+        
+        
+        //else {
             //Display count of books when displaying book info
-            if ((this.props.startIndex + this.props.defaultCount) > this.props.totalCount) {
+            //if ((this.props.startIndex + this.props.defaultCount) > this.props.totalCount) {
                 //Remove Next link 
-                return (
-                    <div>
+                //return (
+                    /*<div>
                         <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>
                         <a
                             onClick={(event) => this.props.handlePaginationPrevious()}
-                            href="#top" className="next">&laquo; Previous
+                            href="#top" className="previous">&laquo; Previous
                     </a>
                         <a
                             className="nextDisabled">Next &raquo;
                     </a>
                         {displayData}
                     </div>
-                );
-            } else if ((this.props.startIndex - this.props.defaultCount) < 0) {
+                );*/
+            //} else if ((this.props.startIndex - this.props.defaultCount) < 0) {
                 //Remove Prevous link 
-                return (
+                /*return (
                     <div>
                         <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>
                         <a
@@ -140,10 +147,10 @@ class DisplayBooklist extends Component {
                         </a>
                         {displayData}
                     </div>
-                );
-            } else {
+                );*/
+            //}// else {
                 //Activate Next and Previous links
-                return (
+                /*return (
                     <div>
                         <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>
                         <a
@@ -156,9 +163,9 @@ class DisplayBooklist extends Component {
                     </a>
                         {displayData}
                     </div>
-                );
-            }
-        }
+                );*/
+            //}
+        //}
     }
 }
 
