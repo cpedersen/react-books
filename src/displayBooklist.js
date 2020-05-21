@@ -71,11 +71,8 @@ class DisplayBooklist extends Component {
     }
 
     render() {
-        //console.log("DisplayBooklist startIndex: ", this.props.startIndex);
-        //console.log("DisplayBooklist endIndex: ", this.props.endIndex);
-
         //If books found, then get info to display for each book 
-        let displayData = '';
+        let displayData = [];
         if (this.props.totalCount > 0) {
             displayData = this.props.books.map((item, i) => {
                 return (
@@ -92,27 +89,25 @@ class DisplayBooklist extends Component {
             });
         }
 
-        //Condition for when we want the display of counts to show up
-        //if (this.props.totalCount === 0) {
-            //Don't display any counts when no books 
-            return (
-                <div>
-                    {this.props.totalCount > 0 && 
-                        <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>}
+        return (
+            <div>
+                {this.props.totalCount > 0 && 
+                    <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>}
 
-                    <a
-                        onClick={(event) => this.props.handlePaginationPrevious()}
-                        href="#top" className={this.props.displayPrevious ? "previous": "previousDisabled"}>&laquo; Previous
-                    </a>
+                
+                <a
+                    onClick={(event) => this.props.handlePaginationPrevious()}
+                    href="#top" className={(this.props.displayPrevious && this.props.startIndex > 0) ? "previous": "previousDisabled"}>&laquo; Previous
+                </a>
 
-                    <a
-                        onClick={(event) => this.props.handlePaginationNext()}
-                        href="#top" className={this.props.displayNext ? "next": "nextDisabled"}>Next &raquo;
-                    </a>
-                    {displayData}
-                </div>
-            );
-        //} 
+                <a
+                    onClick={(event) => this.props.handlePaginationNext()}
+                    href="#top" className={(this.props.displayNext && this.props.startIndex < this.props.totalCount) ? "next": "nextDisabled"}>Next &raquo;
+                </a>
+                {displayData}
+            </div>
+        );
+
         
         
         
