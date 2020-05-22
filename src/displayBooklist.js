@@ -73,7 +73,7 @@ class DisplayBooklist extends Component {
     render() {
         //If books found, then get info to display for each book 
         let displayData = [];
-        if (this.props.totalCount > 0) {
+        if (this.props.totalCount > 0 && this.props.books.length > 0) {
             displayData = this.props.books.map((item, i) => {
                 return (
                     <div className='bookContainer' key={i}>
@@ -94,7 +94,6 @@ class DisplayBooklist extends Component {
                 {this.props.totalCount > 0 && 
                     <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>}
 
-                
                 <a
                     onClick={(event) => this.props.handlePaginationPrevious()}
                     href="#top" className={(this.props.displayPrevious && this.props.startIndex > 0) ? "previous": "previousDisabled"}>&laquo; Previous

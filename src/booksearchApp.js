@@ -177,6 +177,17 @@ class BooksearchApp extends Component {
             console.log("data:")
             console.log(data);
 
+            if (!data.hasOwnProperty('items')) {
+              console.log("**** ITEM NOT AVAILABLE ****");
+              return this.setState({
+                books: [],
+                displayNext: false,
+                displayPrevious: true,
+                startIndex: this.state.startIndex - this.state.defaultCount,
+                endIndex: this.state.endIndex - this.state.defaultCount
+              });
+            } 
+
             //Option #1: Next 
             if (this.state.flag === "next") {
               console.log("Made it inside Option #1 (next)");
@@ -189,6 +200,9 @@ class BooksearchApp extends Component {
                 //If filtering not selected, then counts change
                 if (this.state.flagFilter === false) {
                   console.log("Made it inside flagFilter false");
+
+                  
+
                   this.setState({
                     books: data.items,
                     endIndex: this.state.endIndex + this.state.defaultCount,
