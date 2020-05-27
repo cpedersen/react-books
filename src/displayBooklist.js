@@ -11,7 +11,7 @@ class DisplayBooklist extends Component {
             return (<img alt='Book cover' className='bookNoImg' />);
         }
     }
-
+s
     displayTitle(item) {
         if (item.volumeInfo.title && item.volumeInfo.title.length > 0) {
             return (<h1 className='title'>{item.volumeInfo.title}</h1>);
@@ -73,7 +73,8 @@ class DisplayBooklist extends Component {
     render() {
         //If books found, then get info to display for each book 
         let displayData = [];
-        if (this.props.totalCount > 0 && this.props.books.length > 0) {
+        //if (this.props.totalCount > 0 && this.props.books.length > 0) {
+        if (this.props.foundData && this.props.books.length > 0) {
             displayData = this.props.books.map((item, i) => {
                 return (
                     <div className='bookContainer' key={i}>
@@ -85,14 +86,15 @@ class DisplayBooklist extends Component {
                         {this.displayDescription(item)}
                         <hr className="divider"></hr>
                     </div>
-                );
+                ); 
             });
         }
 
         return (
-            <div>
-                {this.props.totalCount > 0 && 
-                    <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>}
+            <div> 
+                
+                {this.props.foundData && 
+                    <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex}</div>}
 
                 <a
                     onClick={(event) => this.props.handlePaginationPrevious()}
@@ -101,65 +103,13 @@ class DisplayBooklist extends Component {
 
                 <a
                     onClick={(event) => this.props.handlePaginationNext()}
-                    href="#top" className={(this.props.displayNext && this.props.startIndex < this.props.totalCount) ? "next": "nextDisabled"}>Next &raquo;
+                    href="#top" className={(this.props.displayNext && this.props.foundData) ? "next": "nextDisabled"}>Next &raquo;
                 </a>
-                {displayData}
-            </div>
-        );
 
-        
-        
-        
-        //else {
-            //Display count of books when displaying book info
-            //if ((this.props.startIndex + this.props.defaultCount) > this.props.totalCount) {
-                //Remove Next link 
-                //return (
-                    /*<div>
-                        <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>
-                        <a
-                            onClick={(event) => this.props.handlePaginationPrevious()}
-                            href="#top" className="previous">&laquo; Previous
-                    </a>
-                        <a
-                            className="nextDisabled">Next &raquo;
-                    </a>
-                        {displayData}
-                    </div>
-                );*/
-            //} else if ((this.props.startIndex - this.props.defaultCount) < 0) {
-                //Remove Prevous link 
-                /*return (
-                    <div>
-                        <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>
-                        <a
-                            className="previousDisabled">&laquo; Previous
-                        </a>
-                        <a
-                            onClick={(event) => this.props.handlePaginationNext()}
-                            href="#top" className="next">Next &raquo;
-                        </a>
-                        {displayData}
-                    </div>
-                );*/
-            //}// else {
-                //Activate Next and Previous links
-                /*return (
-                    <div>
-                        <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex} of {this.props.totalCount} items</div>
-                        <a
-                            onClick={(event) => this.props.handlePaginationPrevious()}
-                            href="#top" className="previous">&laquo; Previous
-                    </a>
-                        <a
-                            onClick={(event) => this.props.handlePaginationNext()}
-                            href="#top" className="next">Next &raquo;
-                    </a>
-                        {displayData}
-                    </div>
-                );*/
-            //}
-        //}
+                {displayData}
+
+            </div>
+        ); 
     }
 }
 

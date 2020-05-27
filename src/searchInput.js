@@ -27,6 +27,7 @@ class SearchInput extends Component {
                     handleFilterByPrintTypeChange ={this.props.handleFilterByPrintTypeChange}
                     handleFilterByBookTypeChange={this.props.handleFilterByBookTypeChange}
                     handleSearchtermSubmit={this.props.handleSearchtermSubmit}
+                    foundData={this.props.foundData}
                 />
             </div>
 

@@ -28,7 +28,7 @@ class SearchBooks extends Component {
                     handlePaginationPrevious={this.props.handlePaginationPrevious}
                     startIndex={this.props.startIndex}
                     endIndex={this.props.endIndex}
-                    totalCount={this.props.totalCount}
+                    foundData={this.props.foundData}
                     defaultCount={this.props.defaultCount}
                     displayNext={this.props.displayNext}
                     displayPrevious={this.props.displayPrevious}

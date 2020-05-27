@@ -18,11 +18,11 @@ class BooksearchApp extends Component {
           startIndex: 0,
           defaultCount: 40,
           endIndex: 0,
-          totalCount: 0,
           displayNext: true,
           displayPrevious: false,
           flagFilter: false,
-          flag: "next"
+          flagPagination: "",
+          foundData: false
         };
         this.handleSearchtermSubmit = this.handleSearchtermSubmit.bind(this);
         this.handleSearchtermChange = this.handleSearchtermChange.bind(this);
@@ -39,13 +39,7 @@ class BooksearchApp extends Component {
     }
 
     handleSearchtermSubmit() {
-      //YOUAREHERE
-      //this.fetchData("next");
-      this.fetchData(this.state.flag)
-      this.setState({
-          flag: "next"
-      });
-      console.log("handleSearchtermSubmit flag: ", this.state.flag);
+      this.fetchData();
     }
 
     handleFilterByPrintTypeChange(event) {
@@ -53,23 +47,7 @@ class BooksearchApp extends Component {
       this.setState({
           filterByPrintType: event.target.value,
           flagFilter: true
-      });
-      console.log("Within handleFilterByPrintTypeChange: ", this.state.filterByPrintType);
-      console.log("Within flagFilter: ", this.state.flagFilter);
-
-      //YOUAREHERE
-      this.state.filterByPrintType = event.target.value;
-      this.state.flagFilter = true;
-      console.log("Within handleFilterByPrintTypeChange: ", this.state.filterByPrintType);
-      console.log("Within flagFilter: ", this.state.flagFilter);
-
-      /*if (event.target.value === "") {
-      } else {
-        this.setState({
-          filterByPrintType: event.target.value
-        });
-      }*/
-      this.fetchData();
+      }, this.fetchData());
     }
 
     handleFilterByBookTypeChange(event) {
@@ -77,93 +55,46 @@ class BooksearchApp extends Component {
       this.setState({
         filterByBookType: event.target.value,
         flagFilter: true
-      });
-      console.log("Within handleFilterByBookTypeChange: ", this.state.filterByBookType);
-      console.log("Within flagFilter: ", this.state.flagFilter);
-
-      //YOUAREHERE
-      this.state.filterByBookType = event.target.value;
-      this.state.flagFilter = true;
-      console.log("Within handleFilterByBookTypeChange: ", this.state.filterByBookType);
-      console.log("Within flagFilter: ", this.state.flagFilter);
-
-      this.fetchData();
+      }, this.fetchData());
     }
 
     handlePaginationNext() {
+      console.log("Inside handlePaginationNext");
       this.setState({
-          flag: "next"
-      });
-      this.state.flag = "next";
-      console.log("handlePaginationNext flag: ", this.state.flag);
-      this.fetchData(this.state.flag);
+          flagPagination: "next"
+      }, this.fetchData());
+      console.log("Are we setting flagPagination?: ", this.state.flagPagination);
     }
 
     handlePaginationPrevious() {
       this.setState({
-          flag: "previous"
-      });
-      this.state.flag = "previous";
-      console.log("handlePaginationPrevious flag: ", this.state.flag);
-      this.fetchData(this.state.flag);
+          flagPagination: "previous"
+      }, this.fetchData());
     }
 
-    fetchData(flag) {
+
+    fetchData() {
+      //Get book data 
       const apiKey = '&key=AIzaSyBks18TNVfYhV7HAV5HosyBYgGI3e1nV4Q';
       const path = '/books/v1/volumes';
       const printTypeQuery = '&printType=' + this.state.filterByPrintType;
       const bookTypeQuery = '&bookType=' + this.state.filterByBookType; 
       const startIndexQuery = '&startIndex=' + this.state.startIndex;
       const maxResultsQuery = '&maxResults=' + this.state.defaultCount;
-      const searchQuery = '?q=' + this.state.searchTerm;
+      const searchQuery = '?q=' + encodeURI(this.state.searchTerm);
       let url ='https://www.googleapis.com' + path + searchQuery + printTypeQuery + bookTypeQuery + startIndexQuery + maxResultsQuery + apiKey;
-      //console.log("noFilter: ", this.state.noFilter);
-      /*if (this.state.noFilter === 0) {
-        url += bookTypeQuery;
-      } */
-      /*const options = {
-          method: 'GET',
-          headers: {
-              "Content-Type": "application/json" 
-            }
-      };*/
-      console.log("bookType: ", this.state.filterByBookType);
-      console.log("printType: ", this.state.filterByPrintType);
-      console.log("flag: ", flag);
+      console.log("filterByBookType: ", this.state.filterByBookType);
+      console.log("filterByPrintType: ", this.state.filterByPrintType);
+      console.log("flagPagination: ", this.state.flagPagination);
       console.log("url: " + url)
 
       //Don't fetch anything if out of bounds
-      if (((this.state.startIndex + 10) > this.state.totalCount) && (this.state.startIndex !== 0)) {
+      //if (((this.state.startIndex + 10) > 0) && (this.state.startIndex !== 0)) {
+      if ((!this.state.foundData && (this.state.startIndex + 10) > 0) && (this.state.startIndex !== 0)) {
+        console.log("Fetch is out of bounds");
         return;
       } 
-
-      //Fetch #1: Get totalCount to start
-      fetch(url)
-          .then(response => {
-            if(!response.ok) {
-              console.log('Got a GET error :-( ');
-              throw new Error('Could not do a GET of totalItems'); 
-            }
-            console.log('Successfully did a GET of totalItems!');
-            return response.json(); 
-          })
-          .then(data => {
-            console.log("totalItems data:")
-            console.log(data);
-            this.setState({
-                totalCount: data.totalItems,
-                err: null
-            });
-            console.log("fetchData #1 totalCount: ", this.state.totalCount);
-          })
-          .catch(err => {
-            console.log('totalItems Error: ', err.message);
-            this.setState({
-              error: err.message
-            });
-          });
           
-      //Fetch #2: Get the rest of the data using totalCount if/then
       fetch(url)
           .then(response => {
             if(!response.ok) {
@@ -177,6 +108,8 @@ class BooksearchApp extends Component {
             console.log("data:")
             console.log(data);
 
+            //YOUAREHERE4 
+            //If no more data, then only activate Previous button
             if (!data.hasOwnProperty('items')) {
               console.log("**** ITEM NOT AVAILABLE ****");
               return this.setState({
@@ -184,15 +117,18 @@ class BooksearchApp extends Component {
                 displayNext: false,
                 displayPrevious: true,
                 startIndex: this.state.startIndex - this.state.defaultCount,
-                endIndex: this.state.endIndex - this.state.defaultCount
+                endIndex: this.state.endIndex - this.state.defaultCount,
+                foundData: false
               });
             } 
 
             //Option #1: Next 
-            if (this.state.flag === "next") {
-              console.log("Made it inside Option #1 (next)");
+            if (this.state.flagPagination === "next") {
+              console.log("Made it inside Option #1 (next):", this.state.flagPagination);
               //Option #1a: Positive case
-              if ((this.state.startIndex + this.state.defaultCount) < this.state.totalCount) {
+              
+              //if ((this.state.startIndex + this.state.defaultCount) < this.state.totalCount) {
+                if (this.state.foundData) {
                 //This is the positive case: haven't yet reached the upper boundary
                 console.log("Reached positive case under Option #1");
                 console.log("flagFilter: ", this.state.flagFilter);
@@ -200,13 +136,9 @@ class BooksearchApp extends Component {
                 //If filtering not selected, then counts change
                 if (this.state.flagFilter === false) {
                   console.log("Made it inside flagFilter false");
-
-                  
-
                   this.setState({
                     books: data.items,
                     endIndex: this.state.endIndex + this.state.defaultCount,
-                    totalCount: data.totalItems,
                     displayNext: true,
                     displayPrevious: true,
                     err: null
@@ -216,14 +148,13 @@ class BooksearchApp extends Component {
                   this.setState({
                     books: data.items,
                     endIndex: this.state.endIndex,
-                    totalCount: data.totalItems,
                     displayNext: true,
                     displayPrevious: true,
                     err: null
                   });
                 }
 
-                //Don't want to incr startIndex until we're past the first page
+                //Don't incr startIndex until we're past the first page
                 if (this.state.endIndex === this.state.defaultCount) {
                   this.setState({
                     startIndex: 0
@@ -246,7 +177,6 @@ class BooksearchApp extends Component {
                   books: data.items,
                   startIndex: this.state.startIndex,
                   endIndex: this.state.endIndex,
-                  totalCount: data.totalItems,
                   displayNext: false,
                   displayPrevious: true,
                   err: null
@@ -254,9 +184,10 @@ class BooksearchApp extends Component {
               }
 
             //Option 2: Previous
-            } else if (this.state.flag === "previous") {
+            } else if (this.state.flagPagination === "previous") {
               console.log("Made it inside Option #2 (previous)");
               //Option #2a: This is the positive case: haven't yet reached the lower boundary
+              console.log("startIndex & defaultCount", this.state.startIndex, this.state.defaultCount);
               if ((this.state.startIndex - this.state.defaultCount) > 0) {
                 console.log("Reached positive case under Option #2");
                 //If filtering is selected, then counts should not change
@@ -265,7 +196,6 @@ class BooksearchApp extends Component {
                     books: data.items,
                     startIndex: this.state.startIndex - this.state.defaultCount,
                     endIndex: this.state.endIndex - this.state.defaultCount,
-                    totalCount: data.totalItems,
                     displayPrevious: true,
                     displayNext: true,
                     err: null
@@ -275,7 +205,6 @@ class BooksearchApp extends Component {
                     books: data.items,
                     startIndex: this.state.startIndex,
                     endIndex: this.state.endIndex,
-                    totalCount: data.totalItems,
                     displayPrevious: true,
                     displayNext: true,
                     err: null
@@ -286,9 +215,8 @@ class BooksearchApp extends Component {
                 console.log("Reached negative case under Option #2");
                 this.setState({
                   books: data.items,
-                  startIndex: this.state.startIndex,
-                  endIndex: this.state.endIndex,
-                  totalCount: data.totalItems,
+                  startIndex: 0,
+                  endIndex: this.state.defaultCount,
                   displayPrevious: false,
                   displayNext: true,
                   err: null
@@ -299,18 +227,14 @@ class BooksearchApp extends Component {
               console.log("Made it inside Option #3 (first page)");
               this.setState({
                 books: data.items,
-                startIndex: (this.state.startIndex + this.state.defaultCount),
                 endIndex: (this.state.endIndex + this.state.defaultCount),
-                totalCount: data.totalItems,
                 displayPrevious: false,
                 displayNext: true,
+                foundData: true,
                 err: null
               });
+
             }
-            //console.log("fetchData #2 defaultCount: ", this.state.defaultCount);
-            //console.log("fetchData #2 startIndex: ", this.state.startIndex);
-            //console.log("fetchData #2 endIndex: ", this.state.endIndex);
-            //console.log("fetchData #2 totalCount: ", this.state.totalCount);
           })
           .catch(err => {
             console.log('Error: ', err.message);
@@ -318,7 +242,6 @@ class BooksearchApp extends Component {
               error: err.message,
               books: []
           });
-
         });
     }
     
@@ -331,8 +254,8 @@ class BooksearchApp extends Component {
                     books={this.state.books}
                     startIndex={this.state.startIndex}
                     endIndex={this.state.endIndex}
-                    totalCount={this.state.totalCount}
                     defaultCount={this.state.defaultCount}
+                    foundData={this.state.foundData}
                     handleSearchtermChange ={this.handleSearchtermChange}
                     handleSearchtermSubmit={this.handleSearchtermSubmit}
                     filterByPrintType={this.state.filterByPrintType}
