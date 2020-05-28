@@ -7,7 +7,7 @@ class DisplayBooklist extends Component {
         if (item.volumeInfo.hasOwnProperty('imageLinks') && item.volumeInfo.imageLinks.hasOwnProperty('thumbnail')) {
             return (<img alt='Book cover' className='bookImg' src={item.volumeInfo.imageLinks.thumbnail} />);
         } else {
-            console.log("No image to display");
+            //console.log("No image to display");
             return (<img alt='Book cover' className='bookNoImg' />);
         }
     }

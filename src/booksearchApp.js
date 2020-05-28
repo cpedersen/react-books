@@ -18,11 +18,11 @@ class BooksearchApp extends Component {
           startIndex: 0,
           defaultCount: 40,
           endIndex: 0,
-          displayNext: true,
-          displayPrevious: false,
-          flagFilter: false,
-          flagPagination: "",
-          foundData: false
+          foundData: false, /* No data found to start */
+          flagPagination: "",  /* User did not select 'next' or 'previous' to start */
+          displayNext: true,  /* User is allowed to go forward by default */
+          displayPrevious: false,  /* User is not allowed to go back by default */
+          flagFilter: false  /* No filtering applied to start */
         };
         this.handleSearchtermSubmit = this.handleSearchtermSubmit.bind(this);
         this.handleSearchtermChange = this.handleSearchtermChange.bind(this);
@@ -43,11 +43,20 @@ class BooksearchApp extends Component {
     }
 
     handleFilterByPrintTypeChange(event) {
+      //YOUAREHERE - setState not working here
       console.log("handleFilterByPrintTypeChange event value: ", event.target.value);
       this.setState({
           filterByPrintType: event.target.value,
           flagFilter: true
       }, this.fetchData());
+
+      /*this.setState({
+          filterByPrintType: event.target.value,
+          flagFilter: true
+      }, () => {
+        console.log(event.target.value);
+      });
+      this.fetchData());*/
     }
 
     handleFilterByBookTypeChange(event) {
@@ -61,20 +70,20 @@ class BooksearchApp extends Component {
     handlePaginationNext() {
       console.log("Inside handlePaginationNext");
       this.setState({
-          flagPagination: "next"
-      }, this.fetchData());
-      console.log("Are we setting flagPagination?: ", this.state.flagPagination);
+          flagPagination: "next",
+      }, this.fetchData()); 
     }
 
     handlePaginationPrevious() {
       this.setState({
           flagPagination: "previous"
-      }, this.fetchData());
+      }, this.fetchData()); 
     }
 
 
     fetchData() {
       //Get book data 
+      console.log("Made it inside fetchData");
       const apiKey = '&key=AIzaSyBks18TNVfYhV7HAV5HosyBYgGI3e1nV4Q';
       const path = '/books/v1/volumes';
       const printTypeQuery = '&printType=' + this.state.filterByPrintType;
@@ -83,18 +92,19 @@ class BooksearchApp extends Component {
       const maxResultsQuery = '&maxResults=' + this.state.defaultCount;
       const searchQuery = '?q=' + encodeURI(this.state.searchTerm);
       let url ='https://www.googleapis.com' + path + searchQuery + printTypeQuery + bookTypeQuery + startIndexQuery + maxResultsQuery + apiKey;
-      console.log("filterByBookType: ", this.state.filterByBookType);
-      console.log("filterByPrintType: ", this.state.filterByPrintType);
-      console.log("flagPagination: ", this.state.flagPagination);
-      console.log("url: " + url)
 
       //Don't fetch anything if out of bounds
       //if (((this.state.startIndex + 10) > 0) && (this.state.startIndex !== 0)) {
+      //BUG: If not data found, we should still display previous data
       if ((!this.state.foundData && (this.state.startIndex + 10) > 0) && (this.state.startIndex !== 0)) {
         console.log("Fetch is out of bounds");
         return;
       } 
-          
+
+      console.log("filterByBookType: ", this.state.filterByBookType);
+      console.log("filterByPrintType: ", this.state.filterByPrintType);
+      console.log("url: " + url)
+
       fetch(url)
           .then(response => {
             if(!response.ok) {
@@ -108,10 +118,9 @@ class BooksearchApp extends Component {
             console.log("data:")
             console.log(data);
 
-            //YOUAREHERE4 
-            //If no more data, then only activate Previous button
+            //If no more data after doing fetch above, then only activate Previous button
             if (!data.hasOwnProperty('items')) {
-              console.log("**** ITEM NOT AVAILABLE ****");
+              console.log("**** NO DATA TO DISPLAY ****");
               return this.setState({
                 books: [],
                 displayNext: false,
@@ -122,7 +131,10 @@ class BooksearchApp extends Component {
               });
             } 
 
-            //Option #1: Next 
+            console.log("flagPagination: ", this.state.flagPagination);
+            console.log("flagFilter: ", this.state.flagFilter);
+
+            //Option #1: User selected Next 
             if (this.state.flagPagination === "next") {
               console.log("Made it inside Option #1 (next):", this.state.flagPagination);
               //Option #1a: Positive case
@@ -131,7 +143,6 @@ class BooksearchApp extends Component {
                 if (this.state.foundData) {
                 //This is the positive case: haven't yet reached the upper boundary
                 console.log("Reached positive case under Option #1");
-                console.log("flagFilter: ", this.state.flagFilter);
 
                 //If filtering not selected, then counts change
                 if (this.state.flagFilter === false) {
@@ -183,14 +194,14 @@ class BooksearchApp extends Component {
                 });
               }
 
-            //Option 2: Previous
+            //Option 2: User selected Previous
             } else if (this.state.flagPagination === "previous") {
               console.log("Made it inside Option #2 (previous)");
               //Option #2a: This is the positive case: haven't yet reached the lower boundary
               console.log("startIndex & defaultCount", this.state.startIndex, this.state.defaultCount);
               if ((this.state.startIndex - this.state.defaultCount) > 0) {
                 console.log("Reached positive case under Option #2");
-                //If filtering is selected, then counts should not change
+                //If filtering is not selected
                 if (this.state.flagFilter === false) {
                   this.setState({
                     books: data.items,
@@ -205,6 +216,7 @@ class BooksearchApp extends Component {
                     books: data.items,
                     startIndex: this.state.startIndex,
                     endIndex: this.state.endIndex,
+                    flagPagination: "previous",
                     displayPrevious: true,
                     displayNext: true,
                     err: null
@@ -224,10 +236,11 @@ class BooksearchApp extends Component {
               }
             //Option #3: This is what is set after the Search button is selected (initial state)
             } else {
-              console.log("Made it inside Option #3 (first page)");
+              console.log("Made it inside Option #3 (first page by default)");
               this.setState({
                 books: data.items,
                 endIndex: (this.state.endIndex + this.state.defaultCount),
+                flagPagination: "next",
                 displayPrevious: false,
                 displayNext: true,
                 foundData: true,
