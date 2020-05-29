@@ -43,28 +43,29 @@ class BooksearchApp extends Component {
     }
 
     handleFilterByPrintTypeChange(event) {
-      //YOUAREHERE - setState not working here
-      console.log("handleFilterByPrintTypeChange event value: ", event.target.value);
-      this.setState({
-          filterByPrintType: event.target.value,
-          flagFilter: true
-      }, this.fetchData());
+      let filterVal = event.target.value;
+      console.log("handleFilterByPrintTypeChange event value: ", filterVal);
 
-      /*this.setState({
-          filterByPrintType: event.target.value,
+      this.setState({
+          filterByPrintType: filterVal,
           flagFilter: true
       }, () => {
-        console.log(event.target.value);
+        console.log("filterVal: ", filterVal, this.state.flagPagination);
+        this.fetchData();
       });
-      this.fetchData());*/
     }
 
     handleFilterByBookTypeChange(event) {
       console.log("handleFilterByBookTypeChange event value: ", event.target.value);
+      let filterVal = event.target.value;
+
       this.setState({
-        filterByBookType: event.target.value,
-        flagFilter: true
-      }, this.fetchData());
+          filterByBookType: filterVal,
+          flagFilter: true
+      }, () => {
+        console.log("filterVal: ", filterVal, this.state.flagPagination);
+        this.fetchData();
+      });
     }
 
     handlePaginationNext() {
@@ -84,6 +85,7 @@ class BooksearchApp extends Component {
     fetchData() {
       //Get book data 
       console.log("Made it inside fetchData");
+      console.log("filterPagination: ", this.state.flagPagination);
       const apiKey = '&key=AIzaSyBks18TNVfYhV7HAV5HosyBYgGI3e1nV4Q';
       const path = '/books/v1/volumes';
       const printTypeQuery = '&printType=' + this.state.filterByPrintType;
@@ -147,17 +149,23 @@ class BooksearchApp extends Component {
                 //If filtering not selected, then counts change
                 if (this.state.flagFilter === false) {
                   console.log("Made it inside flagFilter false");
+                  //YOUAREHERE1 - Worked on with Felicia
                   this.setState({
                     books: data.items,
-                    endIndex: this.state.endIndex + this.state.defaultCount,
+                    //startIndex: this.state.startIndex + this.state.defaultCount,
+                    endIndex: (data.totalItems < this.state.defaultCount) ? this.state.endIndex: this.state.endIndex + this.state.defaultCount,
                     displayNext: true,
                     displayPrevious: true,
                     err: null
                   });
                 } else {
                   console.log("Made it inside flagFilter true");
+                  console.log("filterByBookType: ", this.state.filterByBookType);
+                  console.log("filterByPrintType: ", this.state.filterByPrintType);
+                  //YOUAREHERE2 - Working on 
                   this.setState({
                     books: data.items,
+                    //startIndex: this.state.startIndex + this.state.defaultCount,
                     endIndex: this.state.endIndex,
                     displayNext: true,
                     displayPrevious: true,
@@ -216,7 +224,7 @@ class BooksearchApp extends Component {
                     books: data.items,
                     startIndex: this.state.startIndex,
                     endIndex: this.state.endIndex,
-                    flagPagination: "previous",
+                    //flagPagination: "previous",
                     displayPrevious: true,
                     displayNext: true,
                     err: null
@@ -240,13 +248,12 @@ class BooksearchApp extends Component {
               this.setState({
                 books: data.items,
                 endIndex: (this.state.endIndex + this.state.defaultCount),
-                flagPagination: "next",
+                //flagPagination: "next",
                 displayPrevious: false,
-                displayNext: true,
+                displayNext: (data.items.length < this.state.defaultCount) ? false: true,
                 foundData: true,
                 err: null
               });
-
             }
           })
           .catch(err => {
