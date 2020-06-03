@@ -4,6 +4,7 @@ import FilterBy from './filterBy.js';
 
 class SearchInput extends Component {
     render() {
+        //console.log("Made it inside SearchInput: ", this.props.searchTerm);
         return (
             <div className="SearchAndFilter" > 
                 <div className="SearchInput">

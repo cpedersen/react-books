@@ -1,0 +1,11 @@
+.DisplayBookDetails {
+    border: 2px solid red;
+    margin: 25px 50px 75px 100px;
+}
+
+.noData {
+    color: red;
+    font-size: 1.875em;
+    padding: 12px;
+    font-weight: bold;
+}

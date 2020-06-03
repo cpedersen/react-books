@@ -112,3 +112,10 @@ a:hover {
     padding-bottom: 12px;
 }
 
+.noData {
+    color: red;
+    font-size: 1.875em;
+    padding: 12px;
+    font-weight: bold;
+}
+

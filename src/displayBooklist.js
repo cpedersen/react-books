@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './displayBooklist.css';
+import DisplayBookDetails from './displayBookDetails.js';
 
 class DisplayBooklist extends Component {
 
@@ -7,11 +8,10 @@ class DisplayBooklist extends Component {
         if (item.volumeInfo.hasOwnProperty('imageLinks') && item.volumeInfo.imageLinks.hasOwnProperty('thumbnail')) {
             return (<img alt='Book cover' className='bookImg' src={item.volumeInfo.imageLinks.thumbnail} />);
         } else {
-            //console.log("No image to display");
             return (<img alt='Book cover' className='bookNoImg' />);
         }
     }
-s
+
     displayTitle(item) {
         if (item.volumeInfo.title && item.volumeInfo.title.length > 0) {
             return (<h1 className='title'>{item.volumeInfo.title}</h1>);
@@ -71,10 +71,10 @@ s
     }
 
     render() {
-        //If books found, then get info to display for each book 
         let displayData = [];
-        //if (this.props.totalCount > 0 && this.props.books.length > 0) {
-        if (this.props.foundData && this.props.books.length > 0) {
+        console.log("********** Inside DisplayBooklist ********** ")
+        if (this.props.foundData && this.props.books.length > 0 ) {
+            //Option #1: If books found, then save info to displayData
             displayData = this.props.books.map((item, i) => {
                 return (
                     <div className='bookContainer' key={i}>
@@ -88,13 +88,27 @@ s
                     </div>
                 ); 
             });
-        }
+        //} else if (!this.props.foundData || this.props.books.length < this.props.defaultCount) {
+        } else if (!this.props.foundData ) {
+            //Option #2: If no books found, then append msg 
+            let books = [];
+            displayData = books.map((item, i) => {
+                if (i === 1) {
+                    return (
+                        <div key={i}>
+                            <div className="noData">There are no items to display.</div>
+                        </div>
+                    ); 
+                }
+            }); 
 
+        } 
+            
+        //Option #3: Otherwise, display user info
         return (
             <div> 
-                
                 {this.props.foundData && 
-                    <div className='displayCount'>{this.props.startIndex}-{this.props.endIndex}</div>}
+                    <div className='displayCount'>{this.props.startIndex - this.props.defaultCount}-{this.props.endIndex- this.props.defaultCount}</div>}
 
                 <a
                     onClick={(event) => this.props.handlePaginationPrevious()}
@@ -108,6 +122,9 @@ s
 
                 {displayData}
 
+                <DisplayBookDetails
+                    books={this.props.books}
+                />
             </div>
         ); 
     }

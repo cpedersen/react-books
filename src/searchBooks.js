@@ -5,7 +5,6 @@ import SearchInput from './searchInput.js';
 import DisplayBooklist from './displayBooklist.js';
 
 class SearchBooks extends Component {
-
     render() {
         return (
             <div className="SearchBooks">
@@ -18,7 +17,7 @@ class SearchBooks extends Component {
                     filterByPrintType={this.props.filterByPrintType}
                     handleFilterByPrintTypeChange ={this.props.handleFilterByPrintTypeChange}
                     handleFilterByBookTypeChange={this.props.handleFilterByBookTypeChange}
-                    filteredBooks={this.props.books}
+                    //filteredBooks={this.props.books}
                     />
                 <DisplayBooklist                    
                     searchTerm={this.props.searchTerm}
@@ -39,6 +38,3 @@ class SearchBooks extends Component {
 }
 
 export default SearchBooks;
-
-
-//handleFilterSubmit={this.props.handleFilterSubmit}
